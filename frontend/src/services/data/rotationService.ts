@@ -1,18 +1,18 @@
-import { demoRotationEvidence } from "../../data/mock";
+import { researchRotationEvidence } from "../../data/research/rotation/rotationEvidenceData";
 import type { RotationEvidence } from "../../types";
 
 export function getRotationEvidence(): RotationEvidence[] {
-  return demoRotationEvidence;
+  return researchRotationEvidence;
 }
 
 export function getPossibleRotations(
   previousCropId?: string,
 ): RotationEvidence[] {
   if (!previousCropId) {
-    return demoRotationEvidence;
+    return researchRotationEvidence;
   }
 
-  return demoRotationEvidence.filter(
+  return researchRotationEvidence.filter(
     (evidence) => evidence.previousCropId === previousCropId,
   );
 }

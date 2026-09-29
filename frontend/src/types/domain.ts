@@ -133,6 +133,9 @@ export interface RotationEvidence {
   id: string;
   previousCropId: string;
   nextCropId: string;
+  previousCropName?: string;
+  nextCropName?: string;
+  transitionType?: string;
 
   seasonCompatibility?: string;
   waterImplications?: string;
@@ -140,11 +143,15 @@ export interface RotationEvidence {
   pestDiseaseBreak?: string;
   salinityImplications?: string;
   waterloggingImplications?: string;
+  systemYieldEvidence?: string;
 
   overallRotationBenefit?: string;
   evidenceSummary?: string;
 
+  evidenceLevel?: string;
   evidenceScope?: RotationEvidenceScope;
+  region?: string;
+  notes?: string;
   source?: DataSource;
   dataStatus: DataStatus;
 }
@@ -229,6 +236,7 @@ export interface DataSource {
   url?: string;
   // Keeps CSV/source-registry provenance explicit while preserving the existing url field.
   sourceUrl?: string;
+  sourceUrls?: string[];
   datasetOrProduct?: string;
   accessDate?: string;
   region?: string;

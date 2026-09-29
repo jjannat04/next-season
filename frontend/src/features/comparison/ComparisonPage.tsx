@@ -52,6 +52,8 @@ export function ComparisonPage() {
   const secondCrop = crops.find(
     (crop) => crop.id === secondRotation?.nextCropId,
   );
+  const firstCropName = firstCrop?.name ?? firstRotation?.nextCropName;
+  const secondCropName = secondCrop?.name ?? secondRotation?.nextCropName;
 
   function handlePreviousCropChange(
     cropId: string,
@@ -194,7 +196,7 @@ export function ComparisonPage() {
                     <div className="grid md:grid-cols-2">
                       <ComparisonColumn
                         cropName={
-                          firstCrop?.name ??
+                          firstCropName ??
                           "Option one"
                         }
                         rotation={firstRotation}
@@ -202,7 +204,7 @@ export function ComparisonPage() {
 
                       <ComparisonColumn
                         cropName={
-                          secondCrop?.name ??
+                          secondCropName ??
                           "Option two"
                         }
                         rotation={secondRotation}
@@ -255,7 +257,7 @@ export function ComparisonPage() {
           </p>
 
           <p className="mt-2 font-[var(--font-display)] text-2xl">
-            {firstCrop?.name ?? "—"}
+            {firstCropName ?? "—"}
           </p>
         </div>
 
@@ -265,7 +267,7 @@ export function ComparisonPage() {
           </p>
 
           <p className="mt-2 font-[var(--font-display)] text-2xl">
-            {secondCrop?.name ?? "—"}
+            {secondCropName ?? "—"}
           </p>
         </div>
       </div>
@@ -273,22 +275,24 @@ export function ComparisonPage() {
       <div className="mt-8 grid gap-8 md:grid-cols-2">
         <div>
           <p className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
-            {firstCrop?.name ?? "Option one"}
+            {firstCropName ?? "Option one"}
           </p>
 
           <p className="mt-3 text-sm leading-6 text-[var(--color-ink-muted)]">
             {firstRotation.overallRotationBenefit ||
+              firstRotation.systemYieldEvidence ||
               "No evidence summary available yet."}
           </p>
         </div>
 
         <div>
           <p className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
-            {secondCrop?.name ?? "Option two"}
+            {secondCropName ?? "Option two"}
           </p>
 
           <p className="mt-3 text-sm leading-6 text-[var(--color-ink-muted)]">
             {secondRotation.overallRotationBenefit ||
+              secondRotation.systemYieldEvidence ||
               "No evidence summary available yet."}
           </p>
         </div>
@@ -353,7 +357,7 @@ function RotationSelector({
               key={rotation.id}
               value={rotation.id}
             >
-              {crop?.name ?? "Unknown crop"}
+              {crop?.name ?? rotation.nextCropName ?? "Unknown crop"}
             </option>
           );
         })}
@@ -445,6 +449,21 @@ function ComparisonColumn({
         <ComparisonItem
           label="Waterlogging implications"
           value={rotation.waterloggingImplications}
+        />
+
+        <ComparisonItem
+          label="System-yield evidence"
+          value={rotation.systemYieldEvidence}
+        />
+
+        <ComparisonItem
+          label="Evidence level"
+          value={rotation.evidenceLevel}
+        />
+
+        <ComparisonItem
+          label="Region"
+          value={rotation.region}
         />
       </div>
 

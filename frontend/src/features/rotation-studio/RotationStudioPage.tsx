@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { ArrowRight, ExternalLink, Sprout } from "lucide-react";
 
 import { Container } from "../../components/ui/Container";
+import type { DataSource } from "../../types";
 import {
   getCrops,
   getCropVarieties,
@@ -208,16 +209,17 @@ export function RotationStudioPage() {
     const nextCrop = crops.find(
       (crop) => crop.id === rotation.nextCropId,
     );
+    const nextCropName = nextCrop?.name ?? rotation.nextCropName;
 
-    if (!nextCrop) {
+    if (!nextCropName) {
       return null;
     }
 
     return (
       <RotationEvidenceCard
         key={rotation.id}
-        previousCropName={previousCrop?.name ?? "Current crop"}
-        nextCropName={nextCrop.name}
+        previousCropName={rotation.previousCropName ?? previousCrop?.name ?? "Current crop"}
+        nextCropName={nextCropName}
         evidenceSummary={rotation.evidenceSummary}
         seasonCompatibility={rotation.seasonCompatibility}
         waterImplications={rotation.waterImplications}
@@ -225,7 +227,13 @@ export function RotationStudioPage() {
         pestDiseaseBreak={rotation.pestDiseaseBreak}
         salinityImplications={rotation.salinityImplications}
         waterloggingImplications={rotation.waterloggingImplications}
+        systemYieldEvidence={rotation.systemYieldEvidence}
         overallRotationBenefit={rotation.overallRotationBenefit}
+        evidenceLevel={rotation.evidenceLevel}
+        transitionType={rotation.transitionType}
+        region={rotation.region}
+        notes={rotation.notes}
+        source={rotation.source}
       />
     );
   })
@@ -255,7 +263,13 @@ interface RotationEvidenceCardProps {
   pestDiseaseBreak?: string;
   salinityImplications?: string;
   waterloggingImplications?: string;
+  systemYieldEvidence?: string;
   overallRotationBenefit?: string;
+  evidenceLevel?: string;
+  transitionType?: string;
+  region?: string;
+  notes?: string;
+  source?: DataSource;
 }
 
 function RotationEvidenceCard({
@@ -268,7 +282,13 @@ function RotationEvidenceCard({
   pestDiseaseBreak,
   salinityImplications,
   waterloggingImplications,
+  systemYieldEvidence,
   overallRotationBenefit,
+  evidenceLevel,
+  transitionType,
+  region,
+  notes,
+  source,
 }: RotationEvidenceCardProps) {
   const [expanded, setExpanded] = useState(false);
 
@@ -292,8 +312,9 @@ function RotationEvidenceCard({
           </div>
 
           <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--color-ink-muted)]">
-  {evidenceSummary || "No evidence summary available yet."}
-</p>
+            {evidenceSummary ||
+              "Open the evidence panel for sourced timing, field constraints, and system-yield evidence."}
+          </p>
         </div>
 
         <button
@@ -342,6 +363,11 @@ function RotationEvidenceCard({
               label="Waterlogging implications"
               value={waterloggingImplications}
             />
+
+            <EvidenceItem
+              label="System-yield evidence"
+              value={systemYieldEvidence}
+            />
           </div>
 
           {overallRotationBenefit && (
@@ -355,9 +381,69 @@ function RotationEvidenceCard({
               </p>
             </div>
           )}
+
+          <div className="mt-5 border-t border-[var(--color-border)] pt-5">
+            <p className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
+              Evidence basis
+            </p>
+
+            <dl className="mt-4 grid gap-4 text-sm sm:grid-cols-2">
+              <EvidenceDetail label="Evidence level" value={evidenceLevel} />
+              <EvidenceDetail label="Transition type" value={transitionType} />
+              <EvidenceDetail label="Region" value={region} />
+              <EvidenceDetail label="Notes" value={notes} />
+            </dl>
+
+            {source && <SourceLinks source={source} />}
+          </div>
         </div>
       )}
     </article>
+  );
+}
+
+interface EvidenceDetailProps {
+  label: string;
+  value?: string;
+}
+
+function EvidenceDetail({ label, value }: EvidenceDetailProps) {
+  return (
+    <div>
+      <dt className="text-[10px] uppercase tracking-[0.14em] text-[var(--color-ink-subtle)]">
+        {label}
+      </dt>
+      <dd className="mt-1 leading-6 text-[var(--color-ink-muted)]">
+        {value ?? "Not provided in the research row."}
+      </dd>
+    </div>
+  );
+}
+
+function SourceLinks({ source }: { source: DataSource }) {
+  const labels = source.title.split(";").map((label) => label.trim());
+  const urls = source.sourceUrls ?? (source.sourceUrl ? [source.sourceUrl] : []);
+
+  return (
+    <div className="mt-5">
+      <p className="text-[10px] uppercase tracking-[0.14em] text-[var(--color-ink-subtle)]">
+        Sources
+      </p>
+      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
+        {urls.map((url, index) => (
+          <a
+            key={url}
+            href={url}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs text-[var(--color-green-800)] hover:text-[var(--color-green-900)]"
+          >
+            {labels[index] ?? `Source ${index + 1}`}
+            <ExternalLink size={13} />
+          </a>
+        ))}
+      </div>
+    </div>
   );
 }
 
