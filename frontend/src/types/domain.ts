@@ -85,6 +85,7 @@ export interface Crop {
   plantingWindow?: string;
   harvestWindow?: string;
   growingDays?: number;
+  growingDaysText?: string;
 
   waterRequirement?: string;
   heatTolerance?: string;
@@ -96,6 +97,8 @@ export interface Crop {
 
   yield?: number;
   yieldUnit?: string;
+  region?: string;
+  notes?: string;
 
   image?: FarmImage;
 
@@ -107,9 +110,20 @@ export interface CropVariety {
   id: string;
   cropId: string;
   name: string;
+  season?: string;
   growingDays?: number;
+  growingDaysText?: string;
   plantingWindow?: string;
   harvestWindow?: string;
+  waterRequirement?: string;
+  heatTolerance?: string;
+  salinityTolerance?: string;
+  waterloggingTolerance?: string;
+  soilType?: string;
+  soilPhRange?: string;
+  yield?: number;
+  yieldUnit?: string;
+  region?: string;
   notes?: string;
   source?: DataSource;
   dataStatus: DataStatus;

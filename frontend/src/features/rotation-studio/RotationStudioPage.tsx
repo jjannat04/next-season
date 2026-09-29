@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
-import { ArrowRight, Sprout } from "lucide-react";
+import { ArrowRight, ExternalLink, Sprout } from "lucide-react";
 
 import { Container } from "../../components/ui/Container";
 import {
   getCrops,
+  getCropVarieties,
   getPossibleRotations,
 } from "../../services/data";
 
@@ -22,6 +23,9 @@ export function RotationStudioPage() {
   const previousCrop = crops.find(
     (crop) => crop.id === previousCropId,
   );
+  const cropVarieties = previousCrop
+    ? getCropVarieties(previousCrop.id)
+    : [];
 
   return (
     <div>
@@ -88,14 +92,94 @@ export function RotationStudioPage() {
               </div>
 
               {previousCrop && (
-                <div className="mt-8 flex items-center gap-3 text-sm text-[var(--color-ink-muted)]">
-                  <span className="font-medium text-[var(--color-ink)]">
-                    {previousCrop.name}
-                  </span>
+                <div className="mt-8 border-t border-[var(--color-border)] pt-6">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[var(--color-ink-muted)]">
+                    <span className="font-medium text-[var(--color-ink)]">
+                      {previousCrop.name}
+                    </span>
 
-                  <ArrowRight size={16} />
+                    {previousCrop.scientificName && (
+                      <span className="italic">{previousCrop.scientificName}</span>
+                    )}
 
-                  <span>Explore next-season options</span>
+                    <span className="rounded-full bg-[var(--color-surface-muted)] px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-[var(--color-ink-subtle)]">
+                      Research
+                    </span>
+                  </div>
+
+                  <p className="mt-3 text-xs leading-5 text-[var(--color-ink-subtle)]">
+                    Species baseline: {previousCrop.source?.title ?? "Source unavailable"}
+                    {previousCrop.region ? ` / ${previousCrop.region}` : ""}
+                  </p>
+
+                  <details className="mt-5 border-t border-[var(--color-border)] pt-5">
+                    <summary className="cursor-pointer text-sm font-medium text-[var(--color-green-800)]">
+                      View {cropVarieties.length} variety research records
+                    </summary>
+
+                    <div className="mt-4 grid gap-px overflow-hidden border border-[var(--color-border)] bg-[var(--color-border)] sm:grid-cols-2">
+                      {cropVarieties.map((variety) => (
+                        <article
+                          key={variety.id}
+                          className="bg-[var(--color-background)] p-4"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <p className="text-sm font-medium text-[var(--color-ink)]">
+                                {variety.name}
+                              </p>
+                              <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
+                                {[variety.season, variety.region]
+                                  .filter(Boolean)
+                                  .join(" / ")}
+                              </p>
+                            </div>
+
+                            {variety.source?.sourceUrl ? (
+                              <a
+                                href={variety.source.sourceUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label={`Open source for ${variety.name}`}
+                                className="shrink-0 text-[var(--color-green-800)] hover:text-[var(--color-green-900)]"
+                              >
+                                <ExternalLink size={15} />
+                              </a>
+                            ) : null}
+                          </div>
+
+                          <p className="mt-3 text-xs leading-5 text-[var(--color-ink-subtle)]">
+                            Source: {variety.source?.title ?? "Source unavailable"}
+                          </p>
+
+                          {(variety.growingDaysText || variety.yield !== undefined) && (
+                            <p className="mt-1 text-xs leading-5 text-[var(--color-ink-muted)]">
+                              {[
+                                variety.growingDaysText
+                                  ? `${variety.growingDaysText} days`
+                                  : undefined,
+                                variety.yield !== undefined
+                                  ? `${variety.yield} ${variety.yieldUnit ?? ""}`.trim()
+                                  : undefined,
+                              ]
+                                .filter(Boolean)
+                                .join(" / ")}
+                            </p>
+                          )}
+                        </article>
+                      ))}
+                    </div>
+                  </details>
+
+                  <div className="mt-6 flex items-center gap-3 text-sm text-[var(--color-ink-muted)]">
+                    <span className="font-medium text-[var(--color-ink)]">
+                      {previousCrop.name}
+                    </span>
+
+                    <ArrowRight size={16} />
+
+                    <span>Explore next-season options</span>
+                  </div>
                 </div>
               )}
             </div>
