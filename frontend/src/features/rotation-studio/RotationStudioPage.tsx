@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { ArrowRight, ExternalLink, Sprout } from "lucide-react";
 
+import { EvidenceBasis } from "../../components/evidence/EvidenceBasis";
 import { Container } from "../../components/ui/Container";
 import type { DataSource } from "../../types";
 import {
@@ -311,6 +312,8 @@ function RotationEvidenceCard({
             </span>
           </div>
 
+          <EvidenceBasis evidenceLevel={evidenceLevel} className="mt-4" />
+
           <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--color-ink-muted)]">
             {evidenceSummary ||
               "Open the evidence panel for sourced timing, field constraints, and system-yield evidence."}
@@ -384,11 +387,10 @@ function RotationEvidenceCard({
 
           <div className="mt-5 border-t border-[var(--color-border)] pt-5">
             <p className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
-              Evidence basis
+              Research context
             </p>
 
             <dl className="mt-4 grid gap-4 text-sm sm:grid-cols-2">
-              <EvidenceDetail label="Evidence level" value={evidenceLevel} />
               <EvidenceDetail label="Transition type" value={transitionType} />
               <EvidenceDetail label="Region" value={region} />
               <EvidenceDetail label="Notes" value={notes} />

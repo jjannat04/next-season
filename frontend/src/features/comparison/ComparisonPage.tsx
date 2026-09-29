@@ -5,6 +5,7 @@ import {
   Scale,
 } from "lucide-react";
 
+import { EvidenceBasis } from "../../components/evidence/EvidenceBasis";
 import { Container } from "../../components/ui/Container";
 import {
   getCrops,
@@ -188,7 +189,7 @@ export function ComparisonPage() {
                     </div>
 
                     <span className="hidden text-xs text-[var(--color-ink-subtle)] sm:block">
-                      Demo evidence
+                      Research evidence
                     </span>
                   </div>
 
@@ -420,6 +421,8 @@ function ComparisonColumn({
         {cropName}
       </h3>
 
+      <EvidenceBasis evidenceLevel={rotation.evidenceLevel} className="mt-5" />
+
       <div className="mt-8 space-y-6">
         <ComparisonItem
           label="Season compatibility"
@@ -454,11 +457,6 @@ function ComparisonColumn({
         <ComparisonItem
           label="System-yield evidence"
           value={rotation.systemYieldEvidence}
-        />
-
-        <ComparisonItem
-          label="Evidence level"
-          value={rotation.evidenceLevel}
         />
 
         <ComparisonItem
