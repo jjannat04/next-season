@@ -1,0 +1,58 @@
+import type { ClimateObservation } from "../../types";
+
+export const demoClimateData: ClimateObservation[] = [
+  {
+    date: "2026-01-01",
+    rainfall: 4.2,
+    temperature: 21.4,
+    minTemperature: 15.8,
+    maxTemperature: 27.2,
+    pressure: 1012.4,
+    dataStatus: "demo",
+  },
+  {
+    date: "2026-02-01",
+    rainfall: 8.7,
+    temperature: 23.1,
+    minTemperature: 17.1,
+    maxTemperature: 29.3,
+    pressure: 1011.2,
+    dataStatus: "demo",
+  },
+  {
+    date: "2026-03-01",
+    rainfall: 18.4,
+    temperature: 26.8,
+    minTemperature: 20.3,
+    maxTemperature: 33.1,
+    pressure: 1008.6,
+    dataStatus: "demo",
+  },
+  {
+    date: "2026-04-01",
+    rainfall: 42.1,
+    temperature: 29.4,
+    minTemperature: 23.8,
+    maxTemperature: 35.7,
+    pressure: 1006.8,
+    dataStatus: "demo",
+  },
+  {
+    date: "2026-05-01",
+    rainfall: 96.5,
+    temperature: 30.2,
+    minTemperature: 25.1,
+    maxTemperature: 35.4,
+    pressure: 1003.9,
+    dataStatus: "demo",
+  },
+  {
+    date: "2026-06-01",
+    rainfall: 188.3,
+    temperature: 29.1,
+    minTemperature: 25.7,
+    maxTemperature: 33.2,
+    pressure: 1001.7,
+    dataStatus: "demo",
+  },
+];
