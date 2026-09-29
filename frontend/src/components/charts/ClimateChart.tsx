@@ -17,6 +17,7 @@ interface ClimateChartProps {
 export function ClimateChart({ data }: ClimateChartProps) {
   const chartData = data.map((observation) => ({
     date: observation.date,
+    periodLabel: observation.periodLabel ?? observation.date,
     temperature: observation.temperature ?? null,
     rainfall: observation.rainfall ?? null,
   }));
@@ -40,7 +41,7 @@ export function ClimateChart({ data }: ClimateChartProps) {
           />
 
           <XAxis
-            dataKey="date"
+            dataKey="periodLabel"
             tick={{
               fill: "var(--color-ink-muted)",
               fontSize: 11,
@@ -84,7 +85,7 @@ export function ClimateChart({ data }: ClimateChartProps) {
             yAxisId="temperature"
             type="monotone"
             dataKey="temperature"
-            name="Temperature"
+            name="Monthly mean temperature (°C)"
             stroke="var(--color-earth-600)"
             strokeWidth={2}
             dot={false}
@@ -95,7 +96,7 @@ export function ClimateChart({ data }: ClimateChartProps) {
             yAxisId="rainfall"
             type="monotone"
             dataKey="rainfall"
-            name="Rainfall"
+            name="Average daily precipitation (mm/day)"
             stroke="var(--color-blue-600)"
             strokeWidth={2}
             dot={false}

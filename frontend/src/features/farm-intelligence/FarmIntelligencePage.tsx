@@ -8,26 +8,43 @@ import { ClimateChart } from "../../components/charts/ClimateChart";
 import { VegetationChart } from "../../components/charts/VegetationChart";
 import { Container } from "../../components/ui/Container";
 import {
-  getClimateData,
   getFarm,
+  getMonthlyClimateDataset,
   getSoilProfile,
   getVegetationData,
+  getYearlyClimateDataset,
 } from "../../services/data";
 
 export function FarmIntelligencePage() {
   const farm = getFarm();
-  const climate = getClimateData();
+  const monthlyClimate = getMonthlyClimateDataset();
+  const yearlyClimate = getYearlyClimateDataset();
+  const climate = monthlyClimate.observations;
   const soil = getSoilProfile();
   const vegetation = getVegetationData();
 
-  const latestClimate = climate.at(-1);
   const latestVegetation = vegetation.at(-1);
+  const hottestMonth = climate.reduce<(typeof climate)[number] | undefined>(
+    (hottest, observation) =>
+      observation.temperature !== undefined &&
+      (hottest?.temperature === undefined ||
+        observation.temperature > hottest.temperature)
+        ? observation
+        : hottest,
+    undefined,
+  );
+  const wettestMonth = climate.reduce<(typeof climate)[number] | undefined>(
+    (wettest, observation) =>
+      observation.rainfall !== undefined &&
+      (wettest?.rainfall === undefined || observation.rainfall > wettest.rainfall)
+        ? observation
+        : wettest,
+    undefined,
+  );
+  const latestYear = yearlyClimate.observations.at(-1);
 
   // Safe values for optional data fields.
   // Real datasets may contain missing observations.
-  const temperature = latestClimate?.temperature ?? 0;
-  const rainfall = latestClimate?.rainfall ?? 0;
-
   const ndvi = latestVegetation?.ndvi ?? 0;
   const evi = latestVegetation?.evi ?? 0;
 
@@ -91,37 +108,37 @@ export function FarmIntelligencePage() {
                   </div>
 
                   <span className="rounded-full bg-[var(--color-surface-muted)] px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-[var(--color-ink-subtle)]">
-                    Demo
+                    Research
                   </span>
                 </div>
 
                 <div className="mt-12 grid grid-cols-2 gap-6">
                   <div>
                     <p className="text-xs text-[var(--color-ink-subtle)]">
-                      Temperature
+                      Hottest monthly mean
                     </p>
 
                     <p className="mt-2 font-[var(--font-display)] text-4xl">
-                      {temperature.toFixed(1)}°
+                      {hottestMonth?.temperature?.toFixed(1) ?? "—"}°
                     </p>
 
                     <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
-                      Latest observation
+                      {hottestMonth?.periodLabel ?? "Not available"}
                     </p>
                   </div>
 
                   <div>
                     <p className="text-xs text-[var(--color-ink-subtle)]">
-                      Rainfall
+                      Highest precipitation rate
                     </p>
 
                     <p className="mt-2 font-[var(--font-display)] text-4xl">
-                      {rainfall.toFixed(0)}
-                      <span className="ml-1 text-lg">mm</span>
+                      {wettestMonth?.rainfall?.toFixed(1) ?? "—"}
+                      <span className="ml-1 text-lg">mm/day</span>
                     </p>
 
                     <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
-                      Monthly precipitation
+                      {wettestMonth?.periodLabel ?? "Not available"} daily average
                     </p>
                   </div>
                 </div>
@@ -187,17 +204,17 @@ export function FarmIntelligencePage() {
       </p>
 
       <h2 className="mt-3 font-[var(--font-display)] text-3xl">
-        How conditions have been changing
+        Climate through the year
       </h2>
 
       <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--color-ink-muted)]">
-        Temperature and rainfall observations provide context for
-        understanding the conditions surrounding the farm.
+        Monthly mean temperature and average daily precipitation show
+        the historical seasonal pattern surrounding the farm.
       </p>
     </div>
 
     <span className="rounded-full bg-[var(--color-surface-muted)] px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-[var(--color-ink-subtle)]">
-      Demo data
+      Research data
     </span>
   </div>
 
@@ -208,14 +225,39 @@ export function FarmIntelligencePage() {
   <div className="mt-5 flex flex-wrap gap-5 border-t border-[var(--color-border)] pt-4">
     <div className="flex items-center gap-2 text-xs text-[var(--color-ink-muted)]">
       <span className="h-2 w-2 rounded-full bg-[var(--color-earth-600)]" />
-      Temperature
+      Monthly mean temperature
     </div>
 
     <div className="flex items-center gap-2 text-xs text-[var(--color-ink-muted)]">
       <span className="h-2 w-2 rounded-full bg-[var(--color-blue-600)]" />
-      Rainfall
+      Average daily precipitation
     </div>
   </div>
+
+  <div className="mt-6 grid gap-5 border-t border-[var(--color-border)] pt-6 sm:grid-cols-3">
+    <div>
+      <p className="text-xs text-[var(--color-ink-subtle)]">Latest year in dataset</p>
+      <p className="mt-2 text-lg font-medium">{latestYear?.periodLabel ?? "—"}</p>
+    </div>
+    <div>
+      <p className="text-xs text-[var(--color-ink-subtle)]">Annual mean temperature</p>
+      <p className="mt-2 text-lg font-medium">
+        {latestYear?.temperature?.toFixed(1) ?? "—"} °C
+      </p>
+    </div>
+    <div>
+      <p className="text-xs text-[var(--color-ink-subtle)]">Annual total precipitation</p>
+      <p className="mt-2 text-lg font-medium">
+        {latestYear?.rainfall?.toFixed(0) ?? "—"} mm
+      </p>
+    </div>
+  </div>
+
+  <p className="mt-6 border-t border-[var(--color-border)] pt-4 text-xs leading-5 text-[var(--color-ink-subtle)]">
+    Source: {monthlyClimate.source.organization} / {monthlyClimate.source.datasetOrProduct},
+    curated historical summaries for {monthlyClimate.source.coordinates} ({monthlyClimate.source.dataPeriod}).
+    Not live API data.
+  </p>
 </article>
 
 {/* Vegetation timeline */}

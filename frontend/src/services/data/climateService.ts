@@ -1,6 +1,17 @@
-import { demoClimateData } from "../../data/mock";
-import type { ClimateObservation } from "../../types";
+import {
+  monthlyClimateDataset,
+  yearlyClimateDataset,
+} from "../../data/research/climate/climateData";
+import type { ClimateDataset, ClimateObservation } from "../../types";
 
 export function getClimateData(): ClimateObservation[] {
-  return demoClimateData;
+  return getMonthlyClimateDataset().observations;
+}
+
+export function getMonthlyClimateDataset(): ClimateDataset {
+  return monthlyClimateDataset;
+}
+
+export function getYearlyClimateDataset(): ClimateDataset {
+  return yearlyClimateDataset;
 }

@@ -19,12 +19,36 @@ export interface FarmLocation {
 
 export interface ClimateObservation {
   date: string;
+  periodLabel?: string;
   rainfall?: number;
   temperature?: number;
   minTemperature?: number;
   maxTemperature?: number;
   pressure?: number;
   source?: DataSource;
+  dataStatus: DataStatus;
+}
+
+export type ClimateTemporalResolution = "monthly" | "yearly";
+
+export interface ClimateDataset {
+  id: string;
+  title: string;
+  temporalResolution: ClimateTemporalResolution;
+  observations: ClimateObservation[];
+  units: {
+    temperature: "°C";
+    rainfall: "mm/day" | "mm";
+    pressure?: "kPa";
+  };
+  fieldMeanings: {
+    temperature: string;
+    rainfall: string;
+    minTemperature?: string;
+    maxTemperature?: string;
+    pressure?: string;
+  };
+  source: DataSource;
   dataStatus: DataStatus;
 }
 
