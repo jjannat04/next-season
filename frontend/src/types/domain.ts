@@ -24,6 +24,7 @@ export interface ClimateObservation {
   minTemperature?: number;
   maxTemperature?: number;
   pressure?: number;
+  source?: DataSource;
   dataStatus: DataStatus;
 }
 
@@ -31,6 +32,7 @@ export interface VegetationObservation {
   date: string;
   ndvi?: number;
   evi?: number;
+  source?: DataSource;
   dataStatus: DataStatus;
 }
 
@@ -46,6 +48,7 @@ export interface SoilProfile {
   salinity?: number;
   drainage?: string;
   waterloggingRisk?: string;
+  source?: DataSource;
   dataStatus: DataStatus;
 }
 
@@ -72,6 +75,7 @@ export interface Crop {
 
   image?: FarmImage;
 
+  source?: DataSource;
   dataStatus: DataStatus;
 }
 
@@ -83,6 +87,7 @@ export interface CropVariety {
   plantingWindow?: string;
   harvestWindow?: string;
   notes?: string;
+  source?: DataSource;
   dataStatus: DataStatus;
 }
 
@@ -101,9 +106,16 @@ export interface RotationEvidence {
   overallRotationBenefit?: string;
   evidenceSummary?: string;
 
+  evidenceScope?: RotationEvidenceScope;
   source?: DataSource;
   dataStatus: DataStatus;
 }
+
+export type RotationEvidenceScope =
+  | "polder30_direct"
+  | "coastal_bangladesh_regional"
+  | "general_agronomy_inferred"
+  | (string & {});
 
 export interface RotationStep {
   id: string;
@@ -177,7 +189,14 @@ export interface DataSource {
   publicationYear?: number;
   sourceType?: string;
   url?: string;
+  // Keeps CSV/source-registry provenance explicit while preserving the existing url field.
+  sourceUrl?: string;
   datasetOrProduct?: string;
+  accessDate?: string;
+  region?: string;
+  coordinates?: string;
+  dataPeriod?: string;
+  processingNote?: string;
 }
 
 export interface FarmImage {
