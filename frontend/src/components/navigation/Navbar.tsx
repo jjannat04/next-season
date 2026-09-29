@@ -14,20 +14,20 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="border-b border-[var(--color-border)] bg-[var(--color-background)]">
-      <div className="mx-auto flex min-h-18 max-w-[1440px] items-center justify-between px-6">
+    <header className="border-b border-white/10 bg-[var(--color-forest)] text-[var(--color-on-dark)]">
+      <div className="mx-auto flex min-h-20 max-w-[var(--content-width)] items-center justify-between px-5 sm:px-8 lg:px-12">
         {/* Brand */}
         <NavLink
           to="/"
           onClick={() => setMenuOpen(false)}
-          className="flex items-baseline gap-2"
+          className="flex items-baseline gap-3 focus-visible:outline-[var(--color-amber-500)]"
           aria-label="Next Season home"
         >
-          <span className="font-[var(--font-display)] text-2xl leading-none">
+          <span className="font-[var(--font-display)] text-[1.75rem] leading-none">
             Next Season
           </span>
 
-          <span className="hidden text-[10px] uppercase tracking-[0.18em] text-[var(--color-ink-muted)] sm:inline">
+          <span className="hidden text-[11px] uppercase tracking-[0.16em] text-white/60 sm:inline">
             Plan what comes next.
           </span>
         </NavLink>
@@ -35,7 +35,7 @@ export function Navbar() {
         {/* Desktop navigation */}
         <nav
           aria-label="Primary navigation"
-          className="hidden md:block"
+          className="hidden lg:block"
         >
           <ul className="flex items-center gap-1">
             {navigationItems.map((item) => (
@@ -44,10 +44,10 @@ export function Navbar() {
                   to={item.path}
                   className={({ isActive }) =>
                     [
-                      "px-3 py-2 text-sm transition-colors",
+                      "border-b-2 px-3 py-2 text-sm font-medium transition-colors",
                       isActive
-                        ? "text-[var(--color-green-800)]"
-                        : "text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]",
+                        ? "border-[var(--color-amber-500)] text-white"
+                        : "border-transparent text-white/65 hover:text-white",
                     ].join(" ")
                   }
                 >
@@ -62,7 +62,7 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => setMenuOpen((open) => !open)}
-          className="rounded-[var(--radius-md)] p-2 text-[var(--color-ink)] md:hidden"
+          className="rounded-[var(--radius-sm)] p-2 text-[var(--color-on-dark)] hover:bg-white/10 lg:hidden"
           aria-label={menuOpen ? "Close navigation" : "Open navigation"}
           aria-expanded={menuOpen}
         >
@@ -74,9 +74,9 @@ export function Navbar() {
       {menuOpen && (
         <nav
           aria-label="Mobile navigation"
-          className="border-t border-[var(--color-border)] md:hidden"
+          className="border-t border-white/10 lg:hidden"
         >
-          <ul className="px-6 py-3">
+          <ul className="px-5 py-3 sm:px-8">
             {navigationItems.map((item) => (
               <li key={item.path}>
                 <NavLink
@@ -84,10 +84,10 @@ export function Navbar() {
                   onClick={() => setMenuOpen(false)}
                   className={({ isActive }) =>
                     [
-                      "block border-b border-[var(--color-border)] py-4 text-sm",
+                      "block border-l-2 px-4 py-3 text-base",
                       isActive
-                        ? "font-medium text-[var(--color-green-800)]"
-                        : "text-[var(--color-ink-muted)]",
+                        ? "border-[var(--color-amber-500)] font-medium text-white"
+                        : "border-transparent text-white/70 hover:text-white",
                     ].join(" ")
                   }
                 >

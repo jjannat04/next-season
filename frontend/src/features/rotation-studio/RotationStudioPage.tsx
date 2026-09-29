@@ -1,89 +1,106 @@
 import { useMemo, useState } from "react";
-import { ArrowRight, ExternalLink, Sprout } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowRight,
+  ExternalLink,
+  Sprout,
+} from "lucide-react";
 
 import { EvidenceBasis } from "../../components/evidence/EvidenceBasis";
 import { Container } from "../../components/ui/Container";
-import type { DataSource } from "../../types";
+import type { DataSource, RotationEvidence } from "../../types";
 import {
   getCrops,
   getCropVarieties,
   getPossibleRotations,
 } from "../../services/data";
 
+const evidenceFields: Array<{
+  number: string;
+  label: string;
+  key: keyof Pick<
+    RotationEvidence,
+    | "seasonCompatibility"
+    | "waterImplications"
+    | "soilNutrientImplications"
+    | "pestDiseaseBreak"
+    | "salinityImplications"
+    | "waterloggingImplications"
+  >;
+}> = [
+  { number: "01", label: "Season / timing", key: "seasonCompatibility" },
+  { number: "02", label: "Water", key: "waterImplications" },
+  { number: "03", label: "Soil / nutrients", key: "soilNutrientImplications" },
+  { number: "04", label: "Pest & disease", key: "pestDiseaseBreak" },
+  { number: "05", label: "Salinity", key: "salinityImplications" },
+  { number: "06", label: "Waterlogging", key: "waterloggingImplications" },
+];
+
 export function RotationStudioPage() {
   const crops = getCrops();
-
-  const [previousCropId, setPreviousCropId] = useState(
-    crops[0]?.id ?? "",
-  );
-
+  const [previousCropId, setPreviousCropId] = useState(crops[0]?.id ?? "");
   const possibleRotations = useMemo(
     () => getPossibleRotations(previousCropId),
     [previousCropId],
   );
-
-  const previousCrop = crops.find(
-    (crop) => crop.id === previousCropId,
+  const [selectedRotationId, setSelectedRotationId] = useState(
+    possibleRotations[0]?.id ?? "",
   );
-  const cropVarieties = previousCrop
-    ? getCropVarieties(previousCrop.id)
-    : [];
+
+  const previousCrop = crops.find((crop) => crop.id === previousCropId);
+  const cropVarieties = previousCrop ? getCropVarieties(previousCrop.id) : [];
+  const selectedRotation =
+    possibleRotations.find((rotation) => rotation.id === selectedRotationId) ??
+    possibleRotations[0];
+
+  function handlePreviousCropChange(cropId: string) {
+    const rotations = getPossibleRotations(cropId);
+    setPreviousCropId(cropId);
+    setSelectedRotationId(rotations[0]?.id ?? "");
+  }
 
   return (
     <div>
-      {/* Header */}
       <section className="border-b border-[var(--color-border)]">
         <Container>
           <div className="max-w-3xl py-16 lg:py-20">
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-green-700)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-green-700)]">
               Rotation studio
             </p>
-
             <h1 className="mt-4 font-[var(--font-display)] text-5xl leading-tight sm:text-6xl">
               Explore what comes next.
             </h1>
-
-            <p className="mt-5 max-w-2xl text-base leading-7 text-[var(--color-ink-muted)] sm:text-lg">
-              Start with the crop currently on the field and explore
-              possible transitions for the following season.
+            <p className="mt-5 max-w-2xl text-lg leading-8 text-[var(--color-ink-muted)]">
+              Start with the crop on the field, then examine why each researched
+              transition may deserve consideration for the following season.
             </p>
           </div>
         </Container>
       </section>
 
-      {/* Rotation workspace */}
       <section>
         <Container>
-          <div className="py-12 lg:py-16">
-            {/* Current crop */}
-            <div className="border border-[var(--color-border)] bg-[var(--color-surface)] p-7 lg:p-9">
-              <div className="flex items-center gap-3">
-                <Sprout
-                  size={21}
-                  strokeWidth={1.5}
-                  className="text-[var(--color-green-700)]"
-                />
+          <div className="py-14 lg:py-20">
+            <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
+              <div>
+                <div className="flex items-center gap-3 text-[var(--color-green-700)]">
+                  <Sprout size={21} strokeWidth={1.5} aria-hidden="true" />
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em]">
+                    Current crop
+                  </p>
+                </div>
 
-                <span className="text-xs font-medium uppercase tracking-[0.16em] text-[var(--color-ink-muted)]">
-                  Current crop
-                </span>
-              </div>
-
-              <div className="mt-8 max-w-md">
                 <label
                   htmlFor="previous-crop"
-                  className="text-xs text-[var(--color-ink-subtle)]"
+                  className="mt-6 block text-xs text-[var(--color-ink-subtle)]"
                 >
                   What is currently growing?
                 </label>
-
                 <select
                   id="previous-crop"
                   value={previousCropId}
-                  onChange={(event) =>
-                    setPreviousCropId(event.target.value)
-                  }
-                  className="mt-2 w-full rounded-[var(--radius-md)] border border-[var(--color-border-strong)] bg-[var(--color-background)] px-4 py-3 text-sm text-[var(--color-ink)] outline-none transition-colors focus:border-[var(--color-green-700)]"
+                  onChange={(event) => handlePreviousCropChange(event.target.value)}
+                  className="mt-2 w-full rounded-[var(--radius-sm)] border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-4 py-3 text-base text-[var(--color-ink)]"
                 >
                   {crops.map((crop) => (
                     <option key={crop.id} value={crop.id}>
@@ -91,332 +108,253 @@ export function RotationStudioPage() {
                     </option>
                   ))}
                 </select>
-              </div>
 
-              {previousCrop && (
-                <div className="mt-8 border-t border-[var(--color-border)] pt-6">
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[var(--color-ink-muted)]">
-                    <span className="font-medium text-[var(--color-ink)]">
-                      {previousCrop.name}
-                    </span>
-
-                    {previousCrop.scientificName && (
-                      <span className="italic">{previousCrop.scientificName}</span>
-                    )}
-
-                    <span className="rounded-full bg-[var(--color-surface-muted)] px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-[var(--color-ink-subtle)]">
-                      Research
-                    </span>
+                {previousCrop && (
+                  <div className="mt-7 border-l-2 border-[var(--color-clay)] pl-5">
+                    <p className="font-[var(--font-display)] text-3xl">
+                      {selectedRotation?.previousCropName ?? previousCrop.name}
+                    </p>
+                    <p className="mt-2 text-sm italic text-[var(--color-ink-muted)]">
+                      {previousCrop.scientificName}
+                    </p>
+                    <p className="mt-3 text-sm leading-6 text-[var(--color-ink-subtle)]">
+                      Species baseline: {previousCrop.source?.title ?? "Source unavailable"}
+                      {previousCrop.region ? ` / ${previousCrop.region}` : ""}
+                    </p>
                   </div>
+                )}
 
-                  <p className="mt-3 text-xs leading-5 text-[var(--color-ink-subtle)]">
-                    Species baseline: {previousCrop.source?.title ?? "Source unavailable"}
-                    {previousCrop.region ? ` / ${previousCrop.region}` : ""}
-                  </p>
-
-                  <details className="mt-5 border-t border-[var(--color-border)] pt-5">
-                    <summary className="cursor-pointer text-sm font-medium text-[var(--color-green-800)]">
-                      View {cropVarieties.length} variety research records
-                    </summary>
-
-                    <div className="mt-4 grid gap-px overflow-hidden border border-[var(--color-border)] bg-[var(--color-border)] sm:grid-cols-2">
-                      {cropVarieties.map((variety) => (
-                        <article
-                          key={variety.id}
-                          className="bg-[var(--color-background)] p-4"
-                        >
-                          <div className="flex items-start justify-between gap-3">
-                            <div>
-                              <p className="text-sm font-medium text-[var(--color-ink)]">
-                                {variety.name}
-                              </p>
-                              <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
-                                {[variety.season, variety.region]
-                                  .filter(Boolean)
-                                  .join(" / ")}
-                              </p>
-                            </div>
-
-                            {variety.source?.sourceUrl ? (
-                              <a
-                                href={variety.source.sourceUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                aria-label={`Open source for ${variety.name}`}
-                                className="shrink-0 text-[var(--color-green-800)] hover:text-[var(--color-green-900)]"
-                              >
-                                <ExternalLink size={15} />
-                              </a>
-                            ) : null}
-                          </div>
-
-                          <p className="mt-3 text-xs leading-5 text-[var(--color-ink-subtle)]">
-                            Source: {variety.source?.title ?? "Source unavailable"}
-                          </p>
-
-                          {(variety.growingDaysText || variety.yield !== undefined) && (
-                            <p className="mt-1 text-xs leading-5 text-[var(--color-ink-muted)]">
-                              {[
-                                variety.growingDaysText
-                                  ? `${variety.growingDaysText} days`
-                                  : undefined,
-                                variety.yield !== undefined
-                                  ? `${variety.yield} ${variety.yieldUnit ?? ""}`.trim()
-                                  : undefined,
-                              ]
-                                .filter(Boolean)
-                                .join(" / ")}
+                <details className="mt-7 border-t border-[var(--color-border)] pt-5">
+                  <summary className="cursor-pointer text-sm font-semibold text-[var(--color-green-800)]">
+                    View {cropVarieties.length} variety research records
+                  </summary>
+                  <div className="mt-5 space-y-5">
+                    {cropVarieties.map((variety) => (
+                      <div key={variety.id} className="border-l border-[var(--color-border-strong)] pl-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="font-medium">{variety.name}</p>
+                            <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
+                              {[variety.season, variety.region].filter(Boolean).join(" / ")}
                             </p>
+                          </div>
+                          {variety.source?.sourceUrl && (
+                            <a
+                              href={variety.source.sourceUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              aria-label={`Open source for ${variety.name}`}
+                              className="text-[var(--color-green-800)]"
+                            >
+                              <ExternalLink size={15} />
+                            </a>
                           )}
-                        </article>
-                      ))}
-                    </div>
-                  </details>
-
-                  <div className="mt-6 flex items-center gap-3 text-sm text-[var(--color-ink-muted)]">
-                    <span className="font-medium text-[var(--color-ink)]">
-                      {previousCrop.name}
-                    </span>
-
-                    <ArrowRight size={16} />
-
-                    <span>Explore next-season options</span>
+                        </div>
+                        <p className="mt-2 text-xs leading-5 text-[var(--color-ink-subtle)]">
+                          {variety.source?.title ?? "Source unavailable"}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                </div>
-              )}
-            </div>
+                </details>
+              </div>
 
-            {/* Possible transitions */}
-            <div className="mt-10">
-              <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-[var(--color-ink-muted)]">
-                    Possible transitions
+              <div>
+                <div className="flex items-center gap-3 text-[var(--color-ink-muted)]">
+                  <ArrowDown size={18} aria-hidden="true" />
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em]">
+                    Possible next crops
                   </p>
-
-                  <h2 className="mt-3 font-[var(--font-display)] text-3xl">
-                    What could follow?
-                  </h2>
                 </div>
 
-                <span className="text-xs text-[var(--color-ink-subtle)]">
-                  Evidence-based exploration
-                </span>
-              </div>
-
-              <div className="mt-7 grid gap-px overflow-hidden border border-[var(--color-border)] bg-[var(--color-border)]">
                 {possibleRotations.length > 0 ? (
-  possibleRotations.map((rotation) => {
-    const nextCrop = crops.find(
-      (crop) => crop.id === rotation.nextCropId,
-    );
-    const nextCropName = nextCrop?.name ?? rotation.nextCropName;
+                  <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                    {possibleRotations.map((rotation) => {
+                      const nextCrop = crops.find(
+                        (crop) => crop.id === rotation.nextCropId,
+                      );
+                      const name = nextCrop?.name ?? rotation.nextCropName ?? "Unknown crop";
+                      const active = rotation.id === selectedRotation?.id;
 
-    if (!nextCropName) {
-      return null;
-    }
-
-    return (
-      <RotationEvidenceCard
-        key={rotation.id}
-        previousCropName={rotation.previousCropName ?? previousCrop?.name ?? "Current crop"}
-        nextCropName={nextCropName}
-        evidenceSummary={rotation.evidenceSummary}
-        seasonCompatibility={rotation.seasonCompatibility}
-        waterImplications={rotation.waterImplications}
-        soilNutrientImplications={rotation.soilNutrientImplications}
-        pestDiseaseBreak={rotation.pestDiseaseBreak}
-        salinityImplications={rotation.salinityImplications}
-        waterloggingImplications={rotation.waterloggingImplications}
-        systemYieldEvidence={rotation.systemYieldEvidence}
-        overallRotationBenefit={rotation.overallRotationBenefit}
-        evidenceLevel={rotation.evidenceLevel}
-        transitionType={rotation.transitionType}
-        region={rotation.region}
-        notes={rotation.notes}
-        source={rotation.source}
-      />
-    );
-  })
-) : (
-  <div className="bg-[var(--color-background)] p-8">
-    <p className="text-sm text-[var(--color-ink-muted)]">
-      No evidence-backed transition is currently
-      available for this crop.
-    </p>
-  </div>
-)}
+                      return (
+                        <button
+                          key={rotation.id}
+                          type="button"
+                          onClick={() => setSelectedRotationId(rotation.id)}
+                          aria-pressed={active}
+                          className={[
+                            "min-h-28 border-l-2 px-5 py-4 text-left transition-colors",
+                            active
+                              ? "border-[var(--color-amber-500)] bg-[var(--color-forest)] text-[var(--color-on-dark)]"
+                              : "border-[var(--color-border-strong)] bg-[var(--color-surface)] text-[var(--color-ink)] hover:border-[var(--color-green-700)]",
+                          ].join(" ")}
+                        >
+                          <span className={`text-xs uppercase tracking-[0.12em] ${
+                            active ? "text-white/55" : "text-[var(--color-ink-subtle)]"
+                          }`}>
+                            {rotation.previousCropName ?? previousCrop?.name}
+                          </span>
+                          <span className="mt-3 flex items-center gap-2 font-[var(--font-display)] text-2xl">
+                            <ArrowRight size={16} aria-hidden="true" />
+                            {name}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="mt-5 text-sm text-[var(--color-ink-muted)]">
+                    No evidence-backed transition is currently available for this crop.
+                  </p>
+                )}
               </div>
             </div>
+
+            {selectedRotation && (
+              <TransitionEvidence
+                rotation={selectedRotation}
+                nextCropName={
+                  crops.find((crop) => crop.id === selectedRotation.nextCropId)?.name ??
+                  selectedRotation.nextCropName ??
+                  "Next crop"
+                }
+              />
+            )}
           </div>
         </Container>
       </section>
     </div>
   );
 }
-interface RotationEvidenceCardProps {
-  previousCropName: string;
-  nextCropName: string;
-  evidenceSummary?: string;
-  seasonCompatibility?: string;
-  waterImplications?: string;
-  soilNutrientImplications?: string;
-  pestDiseaseBreak?: string;
-  salinityImplications?: string;
-  waterloggingImplications?: string;
-  systemYieldEvidence?: string;
-  overallRotationBenefit?: string;
-  evidenceLevel?: string;
-  transitionType?: string;
-  region?: string;
-  notes?: string;
-  source?: DataSource;
-}
 
-function RotationEvidenceCard({
-  previousCropName,
+function TransitionEvidence({
+  rotation,
   nextCropName,
-  evidenceSummary,
-  seasonCompatibility,
-  waterImplications,
-  soilNutrientImplications,
-  pestDiseaseBreak,
-  salinityImplications,
-  waterloggingImplications,
-  systemYieldEvidence,
-  overallRotationBenefit,
-  evidenceLevel,
-  transitionType,
-  region,
-  notes,
-  source,
-}: RotationEvidenceCardProps) {
-  const [expanded, setExpanded] = useState(false);
-
+}: {
+  rotation: RotationEvidence;
+  nextCropName: string;
+}) {
   return (
-    <article className="bg-[var(--color-background)] p-6 lg:p-7">
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+    <section className="mt-16 border-t border-[var(--color-border-strong)] pt-10">
+      <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
         <div>
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-[var(--color-ink-muted)]">
-              {previousCropName}
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-green-700)]">
+            Why this transition?
+          </p>
+          <div className="mt-4 flex items-center gap-3">
+            <span className="font-[var(--font-display)] text-3xl">
+              {rotation.previousCropName}
             </span>
-
-            <ArrowRight
-              size={16}
-              className="text-[var(--color-ink-subtle)]"
-            />
-
-            <span className="font-[var(--font-display)] text-2xl">
+            <ArrowRight className="text-[var(--color-clay)]" size={22} />
+            <span className="font-[var(--font-display)] text-4xl">
               {nextCropName}
             </span>
           </div>
+          <p className="mt-6 text-base leading-7 text-[var(--color-ink-muted)]">
+            {rotation.evidenceSummary ??
+              rotation.overallRotationBenefit ??
+              "Evidence summary not specified."}
+          </p>
 
-          <EvidenceBasis evidenceLevel={evidenceLevel} className="mt-4" />
-
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--color-ink-muted)]">
-            {evidenceSummary ||
-              "Open the evidence panel for sourced timing, field constraints, and system-yield evidence."}
+          <EvidenceBasis evidenceLevel={rotation.evidenceLevel} className="mt-7" />
+          <p className="mt-4 max-w-lg text-sm leading-6 text-[var(--color-ink-subtle)]">
+            This evidence basis applies to the research row as a whole. It does
+            not mean every sub-claim below was directly measured in Polder 30.
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setExpanded((value) => !value)}
-          className="shrink-0 rounded-[var(--radius-md)] border border-[var(--color-border-strong)] px-4 py-2.5 text-xs font-medium text-[var(--color-ink)] transition-colors hover:bg-[var(--color-surface-muted)]"
-          aria-expanded={expanded}
-        >
-          {expanded ? "Hide evidence" : "View evidence"}
-        </button>
+        <div className="border-t border-[var(--color-border-strong)]">
+          {evidenceFields.map((field) => (
+            <EvidenceRow
+              key={field.key}
+              number={field.number}
+              label={field.label}
+              value={rotation[field.key]}
+            />
+          ))}
+        </div>
       </div>
 
-      {expanded && (
-        <div className="mt-7 border-t border-[var(--color-border)] pt-6">
-          <p className="text-xs font-medium uppercase tracking-[0.16em] text-[var(--color-ink-muted)]">
-            Rotation evidence
+      <div className="mt-12 grid gap-10 border-t border-[var(--color-border)] pt-8 lg:grid-cols-2">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-ink-subtle)]">
+            System-yield evidence
           </p>
-
-          <div className="mt-5 grid gap-px overflow-hidden border border-[var(--color-border)] bg-[var(--color-border)] sm:grid-cols-2 lg:grid-cols-3">
-            <EvidenceItem
-              label="Season compatibility"
-              value={seasonCompatibility}
-            />
-
-            <EvidenceItem
-              label="Water implications"
-              value={waterImplications}
-            />
-
-            <EvidenceItem
-              label="Soil nutrients"
-              value={soilNutrientImplications}
-            />
-
-            <EvidenceItem
-              label="Pest / disease break"
-              value={pestDiseaseBreak}
-            />
-
-            <EvidenceItem
-              label="Salinity implications"
-              value={salinityImplications}
-            />
-
-            <EvidenceItem
-              label="Waterlogging implications"
-              value={waterloggingImplications}
-            />
-
-            <EvidenceItem
-              label="System-yield evidence"
-              value={systemYieldEvidence}
-            />
-          </div>
-
-          {overallRotationBenefit && (
-            <div className="mt-5 border-l-2 border-[var(--color-green-700)] pl-4">
-              <p className="text-xs uppercase tracking-[0.14em] text-[var(--color-ink-subtle)]">
+          <p className="mt-3 text-sm leading-6 text-[var(--color-ink-muted)]">
+            {rotation.systemYieldEvidence ?? "Evidence unavailable."}
+          </p>
+          {rotation.overallRotationBenefit && (
+            <>
+              <p className="mt-6 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-ink-subtle)]">
                 Overall rotation benefit
               </p>
-
-              <p className="mt-2 text-sm leading-6 text-[var(--color-ink-muted)]">
-                {overallRotationBenefit}
+              <p className="mt-3 text-sm leading-6 text-[var(--color-ink-muted)]">
+                {rotation.overallRotationBenefit}
               </p>
-            </div>
+            </>
           )}
-
-          <div className="mt-5 border-t border-[var(--color-border)] pt-5">
-            <p className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
-              Research context
-            </p>
-
-            <dl className="mt-4 grid gap-4 text-sm sm:grid-cols-2">
-              <EvidenceDetail label="Transition type" value={transitionType} />
-              <EvidenceDetail label="Region" value={region} />
-              <EvidenceDetail label="Notes" value={notes} />
-            </dl>
-
-            {source && <SourceLinks source={source} />}
-          </div>
         </div>
-      )}
-    </article>
+
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-ink-subtle)]">
+            Research context
+          </p>
+          <dl className="mt-4 space-y-4 text-sm">
+            <EvidenceDetail label="Transition type" value={rotation.transitionType} />
+            <EvidenceDetail label="Region" value={rotation.region} />
+            <EvidenceDetail label="Notes" value={rotation.notes} />
+          </dl>
+          {rotation.source && <SourceLinks source={rotation.source} />}
+        </div>
+      </div>
+    </section>
   );
 }
 
-interface EvidenceDetailProps {
+function EvidenceRow({
+  number,
+  label,
+  value,
+}: {
+  number: string;
   label: string;
   value?: string;
+}) {
+  return (
+    <div className="grid gap-3 border-b border-[var(--color-border)] py-6 sm:grid-cols-[3rem_10rem_1fr]">
+      <span className="text-xs font-semibold tracking-[0.12em] text-[var(--color-ink-subtle)]">
+        {number}
+      </span>
+      <p className="font-medium text-[var(--color-ink)]">{label}</p>
+      {value ? (
+        <div>
+          <p className="line-clamp-3 text-sm leading-6 text-[var(--color-ink-muted)]">
+            {value}
+          </p>
+          <details className="mt-2">
+            <summary className="cursor-pointer text-sm font-semibold text-[var(--color-green-800)]">
+              View full evidence
+            </summary>
+            <p className="mt-3 text-sm leading-6 text-[var(--color-ink-muted)]">
+              {value}
+            </p>
+          </details>
+        </div>
+      ) : (
+        <p className="text-sm text-[var(--color-ink-subtle)]">Evidence unavailable.</p>
+      )}
+    </div>
+  );
 }
 
-function EvidenceDetail({ label, value }: EvidenceDetailProps) {
+function EvidenceDetail({ label, value }: { label: string; value?: string }) {
   return (
     <div>
-      <dt className="text-[10px] uppercase tracking-[0.14em] text-[var(--color-ink-subtle)]">
+      <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-ink-subtle)]">
         {label}
       </dt>
       <dd className="mt-1 leading-6 text-[var(--color-ink-muted)]">
-        {value ?? "Not provided in the research row."}
+        {value ?? "Not specified."}
       </dd>
     </div>
   );
@@ -427,43 +365,24 @@ function SourceLinks({ source }: { source: DataSource }) {
   const urls = source.sourceUrls ?? (source.sourceUrl ? [source.sourceUrl] : []);
 
   return (
-    <div className="mt-5">
-      <p className="text-[10px] uppercase tracking-[0.14em] text-[var(--color-ink-subtle)]">
+    <div className="mt-6 border-t border-[var(--color-border)] pt-5">
+      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-ink-subtle)]">
         Sources
       </p>
-      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
+      <div className="mt-3 space-y-2">
         {urls.map((url, index) => (
           <a
             key={url}
             href={url}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs text-[var(--color-green-800)] hover:text-[var(--color-green-900)]"
+            className="flex items-start gap-2 text-sm leading-5 text-[var(--color-green-800)] hover:text-[var(--color-green-900)]"
           >
+            <ExternalLink size={14} className="mt-0.5 shrink-0" />
             {labels[index] ?? `Source ${index + 1}`}
-            <ExternalLink size={13} />
           </a>
         ))}
       </div>
-    </div>
-  );
-}
-
-interface EvidenceItemProps {
-  label: string;
-  value?: string;
-}
-
-function EvidenceItem({ label, value }: EvidenceItemProps) {
-  return (
-    <div className="bg-[var(--color-background)] p-5">
-      <p className="text-[10px] uppercase tracking-[0.14em] text-[var(--color-ink-subtle)]">
-        {label}
-      </p>
-
-      <p className="mt-2 text-sm leading-6 text-[var(--color-ink-muted)]">
-        {value || "No evidence available yet."}
-      </p>
     </div>
   );
 }

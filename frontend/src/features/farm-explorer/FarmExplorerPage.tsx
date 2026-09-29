@@ -1,4 +1,5 @@
 import { ArrowRight, MapPinned } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import { Container } from "../../components/ui/Container";
 import { FarmMap } from "../../components/map/FarmMap";
@@ -69,13 +70,13 @@ export function FarmExplorerPage() {
                 Next
               </p>
 
-              <a
-                href="/intelligence"
+              <Link
+                to="/intelligence"
                 className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-[var(--color-green-800)] hover:text-[var(--color-green-900)]"
               >
                 View farm intelligence
                 <ArrowRight size={16} />
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -96,13 +97,13 @@ export function FarmExplorerPage() {
                 surrounding the field.
               </p>
 
-              <a
-                href="/intelligence"
+              <Link
+                to="/intelligence"
                 className="mt-7 inline-flex items-center gap-2 text-sm font-medium text-[var(--color-green-800)] hover:text-[var(--color-green-900)]"
               >
                 View farm intelligence
                 <ArrowRight size={16} />
-              </a>
+              </Link>
             </div>
 
             <div className="p-5 lg:p-7">

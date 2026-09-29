@@ -12,9 +12,14 @@ import type { ClimateObservation } from "../../types";
 
 interface ClimateChartProps {
   data: ClimateObservation[];
+  variant?: "light" | "dark";
 }
 
-export function ClimateChart({ data }: ClimateChartProps) {
+export function ClimateChart({
+  data,
+  variant = "light",
+}: ClimateChartProps) {
+  const dark = variant === "dark";
   const chartData = data.map((observation) => ({
     date: observation.date,
     periodLabel: observation.periodLabel ?? observation.date,
@@ -23,7 +28,7 @@ export function ClimateChart({ data }: ClimateChartProps) {
   }));
 
   return (
-    <div className="h-[320px] w-full">
+    <div className="h-[360px] w-full sm:h-[420px]">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={chartData}
@@ -35,7 +40,7 @@ export function ClimateChart({ data }: ClimateChartProps) {
           }}
         >
           <CartesianGrid
-            stroke="var(--color-border)"
+            stroke={dark ? "rgba(255, 255, 255, 0.16)" : "var(--color-border)"}
             strokeDasharray="3 3"
             vertical={false}
           />
@@ -43,8 +48,8 @@ export function ClimateChart({ data }: ClimateChartProps) {
           <XAxis
             dataKey="periodLabel"
             tick={{
-              fill: "var(--color-ink-muted)",
-              fontSize: 11,
+              fill: dark ? "rgba(255, 255, 255, 0.68)" : "var(--color-ink-muted)",
+              fontSize: 12,
             }}
             axisLine={false}
             tickLine={false}
@@ -53,8 +58,8 @@ export function ClimateChart({ data }: ClimateChartProps) {
           <YAxis
             yAxisId="temperature"
             tick={{
-              fill: "var(--color-ink-muted)",
-              fontSize: 11,
+              fill: dark ? "rgba(255, 255, 255, 0.68)" : "var(--color-ink-muted)",
+              fontSize: 12,
             }}
             axisLine={false}
             tickLine={false}
@@ -64,8 +69,8 @@ export function ClimateChart({ data }: ClimateChartProps) {
             yAxisId="rainfall"
             orientation="right"
             tick={{
-              fill: "var(--color-ink-muted)",
-              fontSize: 11,
+              fill: dark ? "rgba(255, 255, 255, 0.68)" : "var(--color-ink-muted)",
+              fontSize: 12,
             }}
             axisLine={false}
             tickLine={false}
@@ -86,8 +91,8 @@ export function ClimateChart({ data }: ClimateChartProps) {
             type="monotone"
             dataKey="temperature"
             name="Monthly mean temperature (°C)"
-            stroke="var(--color-earth-600)"
-            strokeWidth={2}
+            stroke={dark ? "var(--color-earth-500)" : "var(--color-earth-600)"}
+            strokeWidth={2.5}
             dot={false}
             connectNulls
           />
@@ -97,8 +102,8 @@ export function ClimateChart({ data }: ClimateChartProps) {
             type="monotone"
             dataKey="rainfall"
             name="Average daily precipitation (mm/day)"
-            stroke="var(--color-blue-600)"
-            strokeWidth={2}
+            stroke={dark ? "var(--color-blue-500)" : "var(--color-blue-600)"}
+            strokeWidth={2.5}
             dot={false}
             connectNulls
           />

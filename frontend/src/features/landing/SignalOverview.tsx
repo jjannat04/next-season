@@ -1,107 +1,89 @@
-import {
-  CloudRain,
-  Leaf,
-  Sprout,
-  ThermometerSun,
-} from "lucide-react";
+import { CloudRain, GitCompareArrows, Leaf, Sprout } from "lucide-react";
+
 import { Container } from "../../components/ui/Container";
 
 const signals = [
   {
     icon: CloudRain,
     label: "Climate",
-    title: "Rainfall is changing",
+    title: "Rainfall and heat",
     description:
-      "See how rainfall and temperature patterns shape the conditions of the coming season.",
-    metric: "Rainfall",
-    value: "Seasonal trend",
-  },
-  {
-    icon: ThermometerSun,
-    label: "Temperature",
-    title: "Heat leaves a signal",
-    description:
-      "Understand how temperature conditions can affect crop timing and growing conditions.",
-    metric: "Temperature",
-    value: "Observed conditions",
+      "Historical climate observations reveal seasonal patterns in rainfall and temperature.",
   },
   {
     icon: Leaf,
     label: "Vegetation",
-    title: "Fields tell a story",
+    title: "A field-level signal",
     description:
-      "Vegetation signals help reveal how crop and landscape conditions are evolving over time.",
-    metric: "NDVI",
-    value: "Vegetation health",
+      "Vegetation observations add context about how the field and surrounding landscape are responding.",
   },
   {
     icon: Sprout,
     label: "Soil",
-    title: "Every rotation starts below ground",
+    title: "Conditions below ground",
     description:
-      "Soil characteristics and water conditions influence which crop transitions make sense next.",
-    metric: "Soil",
-    value: "Field conditions",
+      "Soil and water conditions shape which crop transitions deserve closer consideration.",
+  },
+  {
+    icon: GitCompareArrows,
+    label: "Rotation evidence",
+    title: "What could follow",
+    description:
+      "Research evidence connects field constraints with crop timing, water, nutrients, and system outcomes.",
   },
 ];
 
 export function SignalOverview() {
   return (
-    <section className="border-b border-[var(--color-border)]">
+    <section className="bg-[var(--color-earth-blue)] text-[var(--color-on-dark)]">
       <Container>
-        <div className="py-20 lg:py-28">
-          <div className="max-w-2xl">
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-green-700)]">
-              Read the field
+        <div className="grid gap-14 py-20 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20 lg:py-28">
+          <div className="lg:sticky lg:top-10 lg:self-start">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/65">
+              Field × Satellite
             </p>
 
-            <h2 className="mt-4 font-[var(--font-display)] text-4xl leading-tight sm:text-5xl">
+            <h2 className="mt-4 max-w-lg font-[var(--font-display)] text-5xl leading-[1.02] sm:text-6xl">
               One field. Many signals.
             </h2>
 
-            <p className="mt-5 max-w-xl text-base leading-7 text-[var(--color-ink-muted)]">
-              No single number explains a farm. Next Season brings
-              different environmental signals together so you can see
-              the bigger picture.
+            <p className="mt-6 max-w-md text-base leading-7 text-white/72">
+              Earth observation can show patterns across time. Field and crop
+              research explains why those patterns matter for a decision on the
+              ground.
             </p>
           </div>
 
-          <div className="mt-14 grid gap-px overflow-hidden border border-[var(--color-border)] bg-[var(--color-border)] sm:grid-cols-2 lg:grid-cols-4">
-            {signals.map((signal) => {
+          <div className="border-t border-white/25">
+            {signals.map((signal, index) => {
               const Icon = signal.icon;
 
               return (
                 <article
                   key={signal.label}
-                  className="group bg-[var(--color-background)] p-6 transition-colors duration-[var(--duration-normal)] hover:bg-[var(--color-surface)] lg:p-7"
+                  className="grid gap-5 border-b border-white/20 py-7 sm:grid-cols-[4rem_1fr] sm:py-9"
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3 sm:block">
                     <Icon
-                      size={23}
+                      size={25}
                       strokeWidth={1.5}
-                      className="text-[var(--color-green-700)]"
+                      className="text-[var(--color-blue-500)]"
+                      aria-hidden="true"
                     />
-
-                    <span className="text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-subtle)]">
-                      {signal.label}
+                    <span className="text-xs font-semibold tracking-[0.14em] text-white/50 sm:mt-4 sm:block">
+                      0{index + 1}
                     </span>
                   </div>
 
-                  <h3 className="mt-12 font-[var(--font-display)] text-2xl leading-tight">
-                    {signal.title}
-                  </h3>
-
-                  <p className="mt-4 text-sm leading-6 text-[var(--color-ink-muted)]">
-                    {signal.description}
-                  </p>
-
-                  <div className="mt-8 border-t border-[var(--color-border)] pt-4">
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-[var(--color-ink-subtle)]">
-                      {signal.metric}
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
+                      {signal.label}
                     </p>
-
-                    <p className="mt-1 text-sm font-medium text-[var(--color-ink)]">
-                      {signal.value}
+                    <h3 className="mt-2 font-[var(--font-display)] text-3xl leading-tight">
+                      {signal.title}
+                    </h3>
+                    <p className="mt-3 max-w-xl text-sm leading-6 text-white/70">
+                      {signal.description}
                     </p>
                   </div>
                 </article>

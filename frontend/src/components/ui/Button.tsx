@@ -8,11 +8,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "bg-[var(--color-green-800)] text-[var(--color-surface)] hover:bg-[var(--color-green-900)]",
+    "bg-[var(--color-green-800)] text-[var(--color-on-dark)] shadow-[var(--shadow-control)] hover:bg-[var(--color-green-900)] hover:shadow-none",
   secondary:
-    "border border-[var(--color-border-strong)] bg-transparent text-[var(--color-ink)] hover:bg-[var(--color-surface-muted)]",
+    "border border-[var(--color-green-800)] bg-[var(--color-surface)] text-[var(--color-green-900)] hover:bg-[var(--color-surface-muted)]",
   ghost:
-    "text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]",
+    "text-[var(--color-green-800)] hover:bg-[var(--color-surface-muted)] hover:text-[var(--color-green-900)]",
 };
 
 export function Button({
@@ -26,11 +26,9 @@ export function Button({
       type={type}
       className={[
         "inline-flex items-center justify-center gap-2",
-        "rounded-[var(--radius-md)] px-4 py-2.5",
-        "text-sm font-medium",
-        "transition-colors duration-[var(--duration-fast)]",
-        "focus-visible:outline-2 focus-visible:outline-offset-2",
-        "focus-visible:outline-[var(--color-green-700)]",
+        "rounded-[var(--radius-sm)] px-5 py-3",
+        "text-sm font-semibold",
+        "transition-[background-color,color,box-shadow] duration-[var(--duration-fast)]",
         variantClasses[variant],
         className,
       ].join(" ")}

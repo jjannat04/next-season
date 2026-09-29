@@ -27,6 +27,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background: var(--color-background);
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 button,
@@ -40,6 +42,11 @@ button {
   cursor: pointer;
 }
 
+:where(a, button, input, textarea, select, summary):focus-visible {
+  outline: 2px solid var(--color-amber-500);
+  outline-offset: 3px;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -47,7 +54,17 @@ a {
 
 ::selection {
   background: var(--color-green-800);
-  color: var(--color-surface);
+  color: var(--color-on-dark);
+}
+
+.text-xs {
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+}
+
+.text-sm {
+  font-size: 0.9375rem;
+  line-height: 1.5rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

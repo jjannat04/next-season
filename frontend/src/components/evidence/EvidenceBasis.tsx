@@ -47,11 +47,11 @@ const evidencePresentations: Record<string, EvidencePresentation> = {
 
 const toneClasses: Record<EvidenceTone, string> = {
   local:
-    "border-[var(--color-green-700)]/30 bg-[var(--color-green-700)]/10 text-[var(--color-green-900)]",
+    "border-[var(--color-green-700)] bg-[var(--color-green-700)]/10 text-[var(--color-green-900)]",
   regional:
-    "border-[var(--color-blue-600)]/30 bg-[var(--color-blue-600)]/10 text-[var(--color-blue-600)]",
+    "border-[var(--color-blue-600)] bg-[var(--color-blue-600)]/10 text-[var(--color-blue-700)]",
   inferred:
-    "border-[var(--color-earth-600)]/30 bg-[var(--color-earth-600)]/10 text-[var(--color-earth-600)]",
+    "border-[var(--color-earth-600)] bg-[var(--color-earth-600)]/10 text-[var(--color-earth-700)]",
   mixed:
     "border-[var(--color-border-strong)] bg-[var(--color-surface-muted)] text-[var(--color-ink-muted)]",
   neutral:
@@ -82,18 +82,18 @@ export function EvidenceBasis({
 
   return (
     <div className={className}>
-      <p className="text-[10px] uppercase tracking-[0.14em] text-[var(--color-ink-subtle)]">
+      <p className="text-xs font-medium uppercase tracking-[0.12em] text-[var(--color-ink-subtle)]">
         Evidence basis
       </p>
 
       <div className="mt-2 flex flex-wrap items-start gap-x-3 gap-y-2">
         <span
-          className={`inline-flex max-w-full border px-2.5 py-1 text-xs leading-5 ${toneClasses[presentation.tone]}`}
+          className={`inline-flex max-w-full border-l-2 px-3 py-1.5 text-sm font-medium ${toneClasses[presentation.tone]}`}
         >
           {presentation.label}
         </span>
 
-        <details className="text-xs text-[var(--color-ink-subtle)]">
+        <details className="text-sm text-[var(--color-ink-subtle)]">
           <summary className="cursor-pointer py-1 text-[var(--color-green-800)]">
             About this label
           </summary>

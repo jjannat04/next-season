@@ -1,9 +1,4 @@
-import {
-  ArrowRight,
-  Compass,
-  GitCompareArrows,
-  SlidersHorizontal,
-} from "lucide-react";
+import { Compass, GitCompareArrows, SlidersHorizontal } from "lucide-react";
 
 import { Container } from "../../components/ui/Container";
 
@@ -11,29 +6,23 @@ const journeySteps = [
   {
     number: "01",
     icon: Compass,
-    title: "Understand your field",
+    title: "Read the field",
     description:
-      "Explore climate, vegetation, soil, and location signals surrounding the farm.",
-    link: "/explore",
-    action: "Explore a farm",
+      "Bring climate history, vegetation, soil, and location signals into view.",
   },
   {
     number: "02",
     icon: GitCompareArrows,
-    title: "Explore crop rotations",
+    title: "Explore rotations",
     description:
-      "Start with the current crop and examine evidence-backed possibilities for the next season.",
-    link: "/rotation",
-    action: "Explore rotations",
+      "Examine sourced crop transitions and the evidence basis behind each relationship.",
   },
   {
     number: "03",
     icon: SlidersHorizontal,
-    title: "Test possible futures",
+    title: "Stress-test and compare",
     description:
-      "Change environmental assumptions and see how different scenarios affect the context.",
-    link: "/scenarios",
-    action: "Open scenario lab",
+      "Change environmental assumptions and compare how possible futures alter the context.",
   },
 ];
 
@@ -42,63 +31,59 @@ export function JourneySection() {
     <section className="border-b border-[var(--color-border)]">
       <Container>
         <div className="py-20 lg:py-28">
-          <div className="max-w-2xl">
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-green-700)]">
-              How it works
-            </p>
+          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-green-700)]">
+                How Next Season works
+              </p>
 
-            <h2 className="mt-4 font-[var(--font-display)] text-4xl leading-tight sm:text-5xl">
-              Explore before you decide.
-            </h2>
+              <h2 className="mt-4 font-[var(--font-display)] text-4xl leading-tight sm:text-5xl">
+                Explore before you decide.
+              </h2>
+            </div>
 
-            <p className="mt-5 max-w-xl text-base leading-7 text-[var(--color-ink-muted)]">
-              Move from understanding the field to exploring
-              possibilities and testing different conditions.
+            <p className="max-w-xl text-base leading-7 text-[var(--color-ink-muted)] lg:justify-self-end">
+              Move from a field-level reading to evidence-backed possibilities,
+              then compare how changing conditions affect the picture.
             </p>
           </div>
 
-          <div className="mt-14 grid gap-px overflow-hidden border border-[var(--color-border)] bg-[var(--color-border)] lg:grid-cols-3">
-            {journeySteps.map((step) => {
+          <ol className="mt-14 grid border-t border-[var(--color-border-strong)] lg:grid-cols-3">
+            {journeySteps.map((step, index) => {
               const Icon = step.icon;
 
               return (
-                <a
+                <li
                   key={step.number}
-                  href={step.link}
-                  className="group bg-[var(--color-background)] p-7 transition-colors duration-[var(--duration-normal)] hover:bg-[var(--color-surface)] lg:p-9"
+                  className={`py-8 lg:px-8 lg:py-10 ${
+                    index > 0
+                      ? "border-t border-[var(--color-border)] lg:border-l lg:border-t-0"
+                      : "lg:pl-0"
+                  }`}
                 >
                   <div className="flex items-center justify-between">
                     <Icon
-                      size={22}
+                      size={23}
                       strokeWidth={1.5}
                       className="text-[var(--color-green-700)]"
+                      aria-hidden="true"
                     />
-
-                    <span className="text-xs font-medium tracking-[0.14em] text-[var(--color-ink-subtle)]">
+                    <span className="text-xs font-semibold tracking-[0.14em] text-[var(--color-ink-subtle)]">
                       {step.number}
                     </span>
                   </div>
 
-                  <h3 className="mt-14 font-[var(--font-display)] text-2xl">
+                  <h3 className="mt-10 font-[var(--font-display)] text-3xl leading-tight">
                     {step.title}
                   </h3>
 
-                  <p className="mt-4 text-sm leading-6 text-[var(--color-ink-muted)]">
+                  <p className="mt-4 max-w-sm text-sm leading-6 text-[var(--color-ink-muted)]">
                     {step.description}
                   </p>
-
-                  <div className="mt-8 flex items-center gap-2 text-sm font-medium text-[var(--color-green-800)]">
-                    {step.action}
-
-                    <ArrowRight
-                      size={16}
-                      className="transition-transform duration-[var(--duration-fast)] group-hover:translate-x-1"
-                    />
-                  </div>
-                </a>
+                </li>
               );
             })}
-          </div>
+          </ol>
         </div>
       </Container>
     </section>

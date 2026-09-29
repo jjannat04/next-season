@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { Layers, MapPin } from "lucide-react";
+import maplibreWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import Map, { Marker, NavigationControl } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import { getFarm } from "../../services/data";
+
+const mapLibrary = import("maplibre-gl").then((library) => {
+  library.setWorkerUrl(maplibreWorkerUrl);
+  return library;
+});
 
 type MapLayer = "base" | "climate" | "vegetation" | "soil";
 
@@ -39,6 +45,7 @@ export function FarmMap() {
   return (
     <div className="relative h-[520px] w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)]">
       <Map
+        mapLib={mapLibrary}
         initialViewState={{
           longitude: farm.location.longitude,
           latitude: farm.location.latitude,

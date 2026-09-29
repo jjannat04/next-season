@@ -3,34 +3,39 @@
      NEXT SEASON — COLOR SYSTEM
      ───────────────────────────── */
 
-  --color-background: #f5f2ea;
-  --color-surface: #fbfaf6;
-  --color-surface-muted: #ece9df;
+  --color-background: #f4f0e6;
+  --color-surface: #fffdf7;
+  --color-surface-muted: #e7e6dc;
 
-  --color-ink: #1f2a24;
-  --color-ink-muted: #66736b;
-  --color-ink-subtle: #89938d;
+  --color-ink: #14221c;
+  --color-ink-muted: #4d5d55;
+  --color-ink-subtle: #68756e;
 
-  --color-green-900: #173c2a;
-  --color-green-800: #24563d;
-  --color-green-700: #36704f;
-  --color-green-600: #4d8963;
+  --color-green-900: #0b3324;
+  --color-green-800: #154b34;
+  --color-green-700: #266747;
+  --color-green-600: #3d8059;
 
-  --color-earth-700: #755b3e;
-  --color-earth-600: #927453;
-  --color-earth-500: #b1926b;
+  --color-earth-700: #704838;
+  --color-earth-600: #8b5b45;
+  --color-earth-500: #b1785b;
 
-  --color-blue-700: #3d6475;
-  --color-blue-600: #5f8290;
-  --color-blue-500: #82a5af;
+  --color-blue-700: #1f4b5c;
+  --color-blue-600: #3e7284;
+  --color-blue-500: #6d9baa;
 
-  --color-amber-600: #b57b28;
-  --color-amber-500: #d09a43;
+  --color-amber-600: #9c661f;
+  --color-amber-500: #c18a36;
 
   --color-red-600: #a64b3c;
 
-  --color-border: #d8d4c9;
-  --color-border-strong: #bdb8aa;
+  --color-border: #d4d0c3;
+  --color-border-strong: #9ea79f;
+
+  --color-forest: #0b3324;
+  --color-earth-blue: #153d4b;
+  --color-clay: #8b5b45;
+  --color-on-dark: #f7f3e8;
 
   /* ─────────────────────────────
      TYPOGRAPHY
@@ -66,6 +71,13 @@
   --radius-xl: 1rem;
 
   /* ─────────────────────────────
+     ELEVATION
+     ───────────────────────────── */
+
+  --shadow-soft: 0 18px 45px rgb(20 34 28 / 0.09);
+  --shadow-control: 0 4px 14px rgb(20 34 28 / 0.12);
+
+  /* ─────────────────────────────
      MOTION
      ───────────────────────────── */
 
@@ -77,6 +89,6 @@
      LAYOUT
      ───────────────────────────── */
 
-  --content-width: 1440px;
+  --content-width: 1280px;
   --content-padding: 1.5rem;
 }
